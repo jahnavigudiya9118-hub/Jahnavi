@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Shoply — Simple E‑Commerce</title>
+  <meta name="description" content="Vanilla JS e‑commerce demo with search, filters, cart, and checkout — no frameworks." />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <div class="container nav" role="navigation" aria-label="Top">
+      <div class="brand">
+        <div class="logo" aria-hidden="true">🛍️</div>
+        <span>Shoply</span>
+        <small class="muted" style="margin-left:6px">Vanilla JS</small>
+      </div>
+      <div class="grow"></div>
+      <div class="toolbar" style="flex:1;max-width:680px">
+        <input id="q" class="input" placeholder="Search products… (e.g. lamp)" aria-label="Search"/>
+        <select id="category" class="select" title="Category">
+          <option value="All">All</option>
+          <option>Electronics</option>
+          <option>Apparel</option>
+          <option>Home</option>
+          <option>Books</option>
+        </select>
+        <select id="sort" class="select" title="Sort">
+          <option value="popular">Popular</option>
+          <option value="rating">Rating</option>
+          <option value="price-asc">Price: Low → High</option>
+          <option value="price-desc">Price: High → Low</option>
+        </select>
+        <button id="openCart" class="btn" aria-haspopup="dialog" aria-controls="cartDrawer">
+          🛒 Cart <span id="cartCount" class="badge" aria-live="polite">0</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="grid">
+      <aside class="sidebar panel" aria-label="Filters">
+        <div class="fieldset">
+          <h4>Price (max)</h4>
+          <input id="price" class="range" type="range" min="100" max="10000" step="50" value="10000"/>
+          <div class="row"><span class="muted">Up to</span><strong id="priceLabel">₹10,000</strong></div>
+        </div>
+        <div class="fieldset">
+          <label class="check">
+            <input id="onlyInStock" type="checkbox"/>
+            <span>Only in stock</span>
+          </label>
+        </div>
+        <div class="fieldset">
+          <button id="resetFilters" class="btn" style="width:100%">Reset filters</button>
+        </div>
+        <p class="muted" style="font-size:12px">Tip: Everything persists in localStorage (cart + filters).</p>
+      </aside>
+
+      <section class="catalog">
+        <div id="resultsInfo" class="muted" style="margin:6px 2px 10px"></div>
+        <div id="cards" class="cards" aria-live="polite"></div>
+      </section>
+    </div>
+  </main>
+
+  <!-- Cart Drawer -->
+  <div id="cartDrawer" class="drawer" role="dialog" aria-modal="true" aria-label="Shopping cart">
+    <div class="scrim" data-close></div>
+    <div class="panel-right">
+      <div class="row" style="margin-bottom:10px">
+        <h3 style="margin:0">Your Cart</h3>
+        <button class="btn ghost" data-close>✕ Close</button>
+      </div>
+      <div id="cartLines"></div>
+      <div class="totals">
+        <div class="row"><span>Subtotal</span><span id="tSubtotal">₹0</span></div>
+        <div class="row"><span>Shipping</span><span id="tShipping">Free</span></div>
+        <div class="row"><span>GST (18%)</span><span id="tTax">₹0</span></div>
+        <div class="row"><strong>Total</strong><strong id="tTotal">₹0</strong></div>
+      </div>
+      <div class="row" style="margin-top:12px;gap:10px">
+        <button id="checkoutBtn" class="btn primary" style="flex:1">Proceed to Checkout</button>
+        <button id="clearCart" class="btn">Clear</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Checkout Modal -->
+  <dialog id="checkoutModal">
+    <div class="modal-header">
+      <strong>Checkout</strong>
+      <form method="dialog"><button class="btn ghost">✕</button></form>
+    </div>
+    <form id="checkoutForm" class="modal-body">
+      <div class="grid-2">
+        <div class="field"><label>Name<input required name="name" autocomplete="name"/></label></div>
+        <div class="field"><label>Email<input required type="email" name="email" autocomplete="email"/></label></div>
+        <div class="field"><label>Phone<input required name="phone" autocomplete="tel"/></label></div>
+        <div class="field"><label>City<input required name="city"/></label></div>
+        <div class="field" style="grid-column:1/-1"><label>Address<textarea name="address" style="height:70px;padding:10px" required></textarea></label></div>
+        <div class="field"><label>Card Number<input required inputmode="numeric" name="card" placeholder="1111 2222 3333 4444"/></label></div>
+        <div class="field"><label>Expiry<input required name="exp" placeholder="MM/YY"/></label></div>
+        <div class="field"><label>CVV<input required name="cvv" placeholder="123"/></label></div>
+      </div>
+      <div class="row" style="margin-top:12px">
+        <button type="submit" class="btn primary" style="min-width:140px"><span class="spinner" hidden></span><span class="submit-text">Pay</span></button>
+        <div class="grow"></div>
+        <strong id="payable">₹0</strong>
+      </div>
+      <p class="muted" style="margin-top:10px;font-size:12px">Demo only — payment is simulated.</p>
+    </form>
+  </dialog>
+
+  <footer>
+    <div class="container">© <span id="year"></span> Shoply. Built with pure HTML/CSS/JS.</div>
+  </footer>
+
+  <script src="app.js" defer></script>
+</body>
+</html>
